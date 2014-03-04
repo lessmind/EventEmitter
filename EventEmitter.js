@@ -360,27 +360,30 @@
 	proto.emitEvent = function emitEvent(evt, args) {
 		var listeners = this.getListenersAsObject(evt);
 		var listener;
-		var i;
+		var i, len;
 		var key;
 		var response;
 
 		for (key in listeners) {
 			if (listeners.hasOwnProperty(key)) {
-				i = listeners[key].length;
+				// i = listeners[key].length;
 
-				while (i--) {
+				// while (i--) {
+				for (i = 0, len = listeners[key].length; i < len; i++) {
 					// If the listener returns true then it shall be removed from the event
 					// The function is executed either with a basic call or an apply if there is an args array
 					listener = listeners[key][i];
 
 					if (listener.once === true) {
 						this.removeListener(evt, listener.listener);
+						i--; len--;
 					}
 
 					response = listener.listener.apply(this, args || []);
 
 					if (response === this._getOnceReturnValue()) {
 						this.removeListener(evt, listener.listener);
+						i--; len--;
 					}
 				}
 			}
